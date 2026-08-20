@@ -54,7 +54,6 @@ export function ShareDonut({
         <p className="text-ink-soft">
           我的数据 <span className="font-semibold tabular-nums text-ink">{mine}</span>
         </p>
-        <p className="text-xs text-ink-soft/85">对比范围：{poolLabel}</p>
         <p className="text-xs font-medium text-brand-soft">当前占比水平：{level}</p>
       </div>
     </div>
