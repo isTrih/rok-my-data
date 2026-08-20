@@ -3,7 +3,7 @@ import { MetricCard } from "./MetricCard";
 import { ShareDonut } from "./ShareDonut";
 import { LiveCalendar } from "./LiveCalendar";
 import { PendingTabs } from "./PendingTabs";
-import { formatAcu, formatInt } from "../lib/format";
+import { formatAcu, formatDuration, formatInt } from "../lib/format";
 import { ACU_THRESHOLD, PLAY_THRESHOLD } from "../lib/api";
 import type { QueryResult, QuerySnapshot } from "../lib/metrics";
 import type { TrackedMetric } from "../lib/celebrate";
@@ -59,6 +59,7 @@ export function ResultView({
               <Stat label="直播过审场次" value={formatInt(snapshot.passedLiveCount)} />
               <Stat label="当前加权ACU*" value={formatAcu(snapshot.weightedAcu)} />
               <Stat label="总PV" value={formatInt(snapshot.livePv)} />
+              <Stat label="过审总时长" value={formatDuration(snapshot.passedLiveDuration)} />
               <Stat label="有效直播天数" value={`${snapshot.validLiveDays} 天`} />
             </dl>
             {showPvShare ? (

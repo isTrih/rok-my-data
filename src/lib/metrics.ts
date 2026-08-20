@@ -45,6 +45,11 @@ export function weightedAcu(lives: LiveRow[]): number {
   return duration === 0 ? 0 : weighted / duration;
 }
 
+/** 计算过审直播总时长（秒）。 */
+export function totalPassedDuration(lives: LiveRow[]): number {
+  return lives.reduce((sum, live) => sum + (live.live_duration_seconds ?? 0), 0);
+}
+
 /** 以中国时区（+08:00）取直播日期，接口返回的时间已是北京时间且不带时区标记。 */
 export function beijingDate(isoLike: string | null): string {
   if (!isoLike) return "";
@@ -89,6 +94,8 @@ export interface QuerySnapshot {
   weightedAcu: number;
   /** 过审场次。 */
   passedLiveCount: number;
+  /** 过审总时长（秒）。 */
+  passedLiveDuration: number;
   /** 有效直播天数。 */
   validLiveDays: number;
   hasVideo: boolean;
@@ -128,6 +135,7 @@ export function buildResult(
       livePv,
       weightedAcu: weightedAcu(passedLives),
       passedLiveCount: passedLives.length,
+      passedLiveDuration: totalPassedDuration(passedLives),
       validLiveDays: [...liveDays.values()].filter(day => day.valid).length,
       hasVideo: videos.length > 0,
       hasLive: lives.length > 0,
