@@ -1,9 +1,11 @@
 import clsx from "clsx";
+import type { SavedCreator } from "../lib/storage";
 import type { ProjectPeriod } from "../lib/types";
 
 /** 查询表单：创作营密钥 + 期数。 */
 export function SearchForm({
   value,
+  savedCreators,
   periods,
   activityPeriodId,
   loading,
@@ -12,6 +14,7 @@ export function SearchForm({
   onSubmit,
 }: {
   value: string;
+  savedCreators: SavedCreator[];
   periods: ProjectPeriod[];
   activityPeriodId: number | null;
   loading: boolean;
@@ -27,6 +30,26 @@ export function SearchForm({
         onSubmit();
       }}
     >
+      {savedCreators.length > 0 ? (
+        <label className="block space-y-1 text-sm text-ink-soft">
+          <span>选择历史查询姓名</span>
+          <select
+            value={savedCreators.some(creator => creator.key === value) ? value : ""}
+            onChange={event => onValueChange(event.target.value)}
+            className="w-full rounded-lg border border-brand/25 bg-white/80 px-3 py-2.5 text-sm text-ink focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand"
+          >
+            <option value="">手动输入新的创作营密钥</option>
+            {savedCreators.map(creator => (
+              <option key={creator.key} value={creator.key}>
+                {creator.name}
+                {savedCreators.some(other => other.key !== creator.key && other.name === creator.name)
+                  ? `（${creator.key.slice(-4)}）`
+                  : ""}
+              </option>
+            ))}
+          </select>
+        </label>
+      ) : null}
       <div className="flex flex-col gap-2 sm:flex-row">
         <label className="relative flex-1">
           <span className="sr-only">创作营密钥</span>

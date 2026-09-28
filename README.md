@@ -4,7 +4,7 @@ React + Vite + Tailwind CSS 前端，使用 EdgeOne Makers Edge Function 代理�
 
 ## 功能特性
 
-- **查询前**：活动头图（占位）、简介、表单（创作者 key + 期数选择），输入内容缓存在浏览器
+- **查询前**：活动头图（占位）、简介、表单（创作者 key + 期数选择），输入内容缓存在浏览器；成功查询后会在本地保存姓名与 key，下次可从姓名下拉列表选取
 - **查询后（未查到数据）**：提示用户联系微信小助手「洛洛」
 - **查询后（有数据）**：
   - 概览指标卡：播放量、过审稿件数量、直播 PV、直播加权 ACU*、过审场次
@@ -59,7 +59,7 @@ src/
 │   ├── types.ts            # 接口类型定义
 │   ├── metrics.ts          # 加权 ACU、日历聚合、审核分类、结果构建
 │   ├── format.ts           # 格式化工具（千分位、时长、标题脱敏、链接）
-│   ├── storage.ts          # LocalStorage 缓存（表单、快照）
+│   ├── storage.ts          # LocalStorage 缓存（表单、快照、历史姓名与 key）
 │   └── celebrate.ts        # 增长对比与礼花效果
 ├── components/
 │   ├── Frame.tsx           # Panel 容器、头图占位

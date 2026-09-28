@@ -2,7 +2,7 @@ import { useCallback, useEffect, useRef, useState } from "react";
 import { ACU_THRESHOLD, PLAY_THRESHOLD, fetchLivePvBelowAcu, fetchPeriods, fetchPlayBelowTotal, searchByKey } from "./lib/api";
 import { buildResult, type QueryResult, type QuerySnapshot } from "./lib/metrics";
 import { celebrate, diffSnapshot, type TrackedMetric } from "./lib/celebrate";
-import { loadForm, loadSnapshot, saveForm, saveSnapshot } from "./lib/storage";
+import { loadCreators, loadForm, loadSnapshot, saveCreator, saveForm, saveSnapshot, type SavedCreator } from "./lib/storage";
 import type { ProjectPeriod } from "./lib/types";
 import { HeroBanner, Panel } from "./components/Frame";
 import { SearchForm } from "./components/SearchForm";
@@ -15,6 +15,7 @@ export function App() {
   const [periods, setPeriods] = useState<ProjectPeriod[]>([]);
   const [activityPeriodId, setActivityPeriodId] = useState<number | null>(null);
   const [keyword, setKeyword] = useState("");
+  const [savedCreators, setSavedCreators] = useState<SavedCreator[]>(loadCreators);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [phase, setPhase] = useState<Phase>("idle");
@@ -70,6 +71,10 @@ export function App() {
         return;
       }
 
+      const creatorName = next.videos.map(video => video.author_name).find(name => name?.trim())
+        ?? next.lives.map(live => live.anchor_name).find(name => name?.trim());
+      if (creatorName) setSavedCreators(saveCreator({ name: creatorName, key }));
+
       // 首次查询没有缓存，按全 0 处理，因此任何数据都会触发增长反馈。
       const cachedSnapshot = loadSnapshot(key, activityPeriodId);
       const grownFields = diffSnapshot(next.snapshot, cachedSnapshot);
@@ -116,6 +121,7 @@ export function App() {
           </header>
           <SearchForm
             value={keyword}
+            savedCreators={savedCreators}
             periods={periods}
             activityPeriodId={activityPeriodId}
             loading={loading}
