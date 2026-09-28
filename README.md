@@ -1,6 +1,6 @@
 # 万国觉醒创作营 · 活动数据查询
 
-纯前端静态站点，使用 React + Vite + Tailwind CSS 构建，支持创作者查询视频与直播数据，展示播放量、直播 PV、加权 ACU*、有效直播天数等核心指标，并在数据增长时提供动画反馈与礼花庆祝效果。
+React + Vite + Tailwind CSS 前端，使用 EdgeOne Makers Edge Function 代理数据查询，支持创作者查询视频与直播数据，展示播放量、直播 PV、加权 ACU*、有效直播天数等核心指标，并在数据增长时提供动画反馈与礼花庆祝效果。
 
 ## 功能特性
 
@@ -20,9 +20,7 @@
 - **包管理器**：Bun
 - **样式**：Tailwind CSS v4（inline @theme）
 - **动画**：Motion（未使用）、canvas-confetti（礼花）
-- **后端对接**：
-  - 本地开发：Vite proxy 将 `/api` 转发到 `https://autoxingtu.api.ali.trih.top`
-  - 生产环境：前端直连后端域名（后端已放行 CORS）
+- **后端对接**：浏览器请求同源 `/api`，Edge Function 从云环境变量 `auth` 读取认证值并转发到上游
 
 ## 开发与构建
 
@@ -30,7 +28,7 @@
 # 安装依赖
 bun install
 
-# 启动开发服务器（http://localhost:3000，支持 HMR）
+# 启动前端开发服务器（http://localhost:3000，支持 HMR）
 bun run dev
 
 # 类型检查
@@ -48,14 +46,16 @@ bun run check
 
 ## 部署
 
-构建后将 `dist/` 目录部署到腾讯 EdgeOne Pages 或任意静态托管服务即可。前端会通过运行时判断直连后端 API。
+在 EdgeOne Makers 项目中将构建命令设为 `bun run build`、静态资源目录设为 `dist`，并在云环境变量中配置 `auth`。函数会将该变量的完整内容作为上游 `Authorization` 请求头的值；如果上游要求 Bearer 认证，请将变量值配置为 `Bearer <token>`。代码推送到关联的 Git 仓库后，Makers 会同时发布静态资源和仓库根目录的 `edge-functions/`。`auth` 仅在 Edge Function 中读取，不写入仓库或浏览器代码。
+
+本地单独运行 Vite 时只有前端静态资源；需要调用 `/api` 时，请使用支持 Functions 的 EdgeOne 本地开发环境或已发布站点。
 
 ## 项目结构
 
 ```
 src/
 ├── lib/
-│   ├── api.ts              # API 请求封装（开发环境走代理，生产直连）
+│   ├── api.ts              # 同源 API 请求封装
 │   ├── types.ts            # 接口类型定义
 │   ├── metrics.ts          # 加权 ACU、日历聚合、审核分类、结果构建
 │   ├── format.ts           # 格式化工具（千分位、时长、标题脱敏、链接）
@@ -75,7 +75,8 @@ src/
 ├── index.css               # Tailwind 主题与自定义动画
 └── vite-env.d.ts           # Vite 环境类型
 
-vite.config.ts              # Vite 配置（React + Tailwind + dev proxy）
+edge-functions/api/[[default]].js # Edge Function：仅转发 4 个查询接口
+vite.config.ts              # Vite 配置（React + Tailwind）
 tsconfig.json               # TypeScript 配置
 package.json                # 依赖与脚本
 index.html                  # HTML 入口
@@ -83,10 +84,12 @@ index.html                  # HTML 入口
 
 ## API 接口
 
-- `GET /api/v1/queries/projects` - 查询活动期次列表（仅使用 project_id=1 的 ROK 期数）
+- `GET /api/v1/queries/projects` - 查询活动期次列表（前端仅使用 project_id=1 的 ROK 期数）
 - `POST /api/v1/queries/v2/audit-extra/search` - 按 key 精确查询用户视频与直播明细
 - `POST /api/v1/queries/v2/audit-extra/video-play/author-total-below` - 播放量低于门槛的作者总播放（对比用）
 - `POST /api/v1/queries/v2/audit-extra/live-pv/weighted-acu-below` - 加权 ACU 低于门槛的主播总 PV（对比用）
+
+以上路径由同源 Edge Function 处理。它只接受列出的路径和方法，向上游附加从 `auth` 云环境变量读取的认证值，并原样返回上游状态码和响应内容。请在 Makers 中配置环境变量后再发布。
 
 ## 数据说明
 

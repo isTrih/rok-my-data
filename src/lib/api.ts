@@ -1,13 +1,5 @@
 import type { BelowThresholdResponse, ProjectPeriod, SearchResponse } from "./types";
 
-/** 后端域名。开发环境走本地代理（同源 /api），生产直连（后端已放行 CORS）。 */
-export const UPSTREAM_BASE = "https://autoxingtu.api.ali.trih.top";
-
-/**
- * 开发环境走 Vite 的 /api 代理（同源），生产直连后端域名（后端已放行 CORS）。
- */
-const API_BASE = import.meta.env.DEV ? "" : UPSTREAM_BASE;
-
 /** 本页只关注 ROK 主项目。 */
 export const ROK_PROJECT_ID = 1;
 export const PLAY_THRESHOLD = 100_000;
@@ -15,7 +7,7 @@ export const ACU_THRESHOLD = 10;
 const PASSED = "审核通过";
 
 async function request<T>(path: string, body?: unknown): Promise<T> {
-  const response = await fetch(`${API_BASE}${path}`, {
+  const response = await fetch(path, {
     method: body === undefined ? "GET" : "POST",
     headers: body === undefined ? undefined : { "content-type": "application/json" },
     body: body === undefined ? undefined : JSON.stringify(body),
