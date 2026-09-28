@@ -26,7 +26,7 @@ export default async function onRequest({ request, env }) {
     const headers = new Headers();
     if (method === "POST") headers.set("content-type", "application/json");
     // 上游认证头在部署时由 Makers 的 auth 环境变量提供。
-    headers.set("Authorization", env.auth);
+    headers.set("Authorization", `Bearer ${env.auth}`);
 
     const response = await fetch(`${UPSTREAM}${path}`, {
       method,

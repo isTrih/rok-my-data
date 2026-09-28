@@ -46,7 +46,7 @@ bun run check
 
 ## 部署
 
-在 EdgeOne Makers 项目中将构建命令设为 `bun run build`、静态资源目录设为 `dist`，并在云环境变量中配置 `auth`。函数会将该变量的完整内容作为上游 `Authorization` 请求头的值；如果上游要求 Bearer 认证，请将变量值配置为 `Bearer <token>`。代码推送到关联的 Git 仓库后，Makers 会同时发布静态资源和仓库根目录的 `edge-functions/`。`auth` 仅在 Edge Function 中读取，不写入仓库或浏览器代码。
+在 EdgeOne Makers 项目中将构建命令设为 `bun run build`、静态资源目录设为 `dist`，并在云环境变量 `auth` 中只配置令牌本身（不含 `Bearer` 和空格）。函数会自动发送 `Authorization: Bearer <auth>`。代码推送到关联的 Git 仓库后，Makers 会同时发布静态资源和仓库根目录的 `edge-functions/`。`auth` 仅在 Edge Function 中读取，不写入仓库或浏览器代码。
 
 本地单独运行 Vite 时只有前端静态资源；需要调用 `/api` 时，请使用支持 Functions 的 EdgeOne 本地开发环境或已发布站点。
 
