@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState, type ComponentProps } from "react";
 import type { SearchForm } from "./SearchForm";
 
-export function TataSearchForm({ value, savedCreators, periods, periodsLoading, activityPeriodId, loading, onValueChange, onPeriodChange, onSubmit }: ComponentProps<typeof SearchForm>) {
+export function TataSearchForm({ value, savedCreators, periods, periodsLoading, activityPeriodId, loading, onValueChange, onSubmit }: ComponentProps<typeof SearchForm>) {
   const dialog = useRef<HTMLDialogElement>(null);
   const input = useRef<HTMLInputElement>(null);
   const opener = useRef<HTMLButtonElement>(null);
@@ -20,8 +20,8 @@ export function TataSearchForm({ value, savedCreators, periods, periodsLoading, 
   const close = () => { setOpen(false); opener.current?.focus(); };
   return <div className="tata-query-entry">
     <label className="tata-period-picker" data-long-label={selectedLabel.length > 10}>
-      <span className="sr-only">选择期数</span>
-      <select aria-label="选择期数" disabled={loading || periods.length === 0} value={activityPeriodId ?? ""} onChange={event => onPeriodChange(Number(event.target.value))}>
+      <span className="sr-only">当前期次</span>
+      <select aria-label="当前期次" disabled value={activityPeriodId ?? ""}>
         {periods.length === 0 ? <option value="">{periodsLoading ? "期数加载中…" : "暂无可选期数"}</option> : null}
         {periods.map(period => <option key={period.activity_period_id} value={period.activity_period_id}>{period.period}</option>)}
       </select>

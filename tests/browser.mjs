@@ -45,7 +45,9 @@ try {
     await page.goto("http://127.0.0.1:3000/tata?act=31");
     await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "31");
     assert.equal(await page.locator('nav, a[href="/rok"], a[href="/tata"]').count(), 0);
-    await page.locator('select').selectOption("30");
+    assert.equal(await page.locator(".tata-period-picker select").isDisabled(), true);
+    await page.goto("http://127.0.0.1:3000/tata?act=30");
+    await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "30");
     assert.equal(await page.getByRole("textbox").count(), 0);
     assert.equal(await page.getByText("创作营", { exact: false }).count(), 0);
     assert.equal(await page.locator('select option').count(), 2);
@@ -113,9 +115,11 @@ try {
     assert.equal(await page.getByRole('dialog', { name: '直播日历', exact: true }).count(), 0);
     assert.equal(await page.locator('.tata-category-live .tata-rank-award').count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-    await page.locator('.tata-period-picker select').selectOption("31");
+    await page.goto("http://127.0.0.1:3000/tata?act=31");
+    await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "31");
     assert.equal(await page.getByRole("tab").count(), 0);
-    await page.locator('.tata-period-picker select').selectOption("30");
+    await page.goto("http://127.0.0.1:3000/tata?act=30");
+    await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "30");
     await page.reload();
     await page.locator('.tata-result-head').waitFor();
     assert.equal(await page.locator('.tata-floating-support').count(), 0);
