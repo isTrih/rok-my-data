@@ -38,7 +38,7 @@ export function weightedAcu(lives: LiveRow[]): number {
   let duration = 0;
   for (const live of lives) {
     const seconds = live.live_duration_seconds ?? 0;
-    if (seconds <= 0) continue;
+    if (seconds <= 0 || live.acu == null) continue;
     weighted += (live.acu ?? 0) * seconds;
     duration += seconds;
   }

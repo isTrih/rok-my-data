@@ -67,7 +67,7 @@ export function PendingTabs({ videos, lives }: { videos: VideoRow[]; lives: Live
   const start = (currentPage - 1) * pageSize;
 
   return (
-    <section className="panel overflow-hidden">
+    <section className="panel overflow-hidden pending-details">
       <div role="tablist" aria-label="未过审明细" className="flex border-b border-brand/15">
         {tabs.map(tab => (
           <button
@@ -103,12 +103,12 @@ export function PendingTabs({ videos, lives }: { videos: VideoRow[]; lives: Live
                 const stage = auditStage(video.audit_result);
                 return (
                   <tr key={video.video_id} className="border-t border-brand/10">
-                    <Td title={video.title ?? undefined}>{truncateTitle(video.title)}</Td>
-                    <Td><StageBadge auditResult={video.audit_result} /></Td>
-                    <Td className="text-ink-soft">
+                    <Td label="标题" title={video.title ?? undefined}>{truncateTitle(video.title)}</Td>
+                    <Td label="状态"><StageBadge auditResult={video.audit_result} /></Td>
+                    <Td label="未过审原因" className="text-ink-soft">
                       {stage === "pending" ? "审核中，请耐心等待" : (video.label ?? "—")}
                     </Td>
-                    <Td className="text-right">
+                    <Td label="视频链接" className="text-right">
                       <ExternalLink href={videoUrl(video.video_id)}>点击查看</ExternalLink>
                     </Td>
                   </tr>
@@ -131,10 +131,10 @@ export function PendingTabs({ videos, lives }: { videos: VideoRow[]; lives: Live
                 const stage = auditStage(live.audit_result);
                 return (
                   <tr key={live.live_room_id} className="border-t border-brand/10">
-                    <Td className="tabular-nums">{formatDateTime(live.start_time)}</Td>
-                    <Td className="tabular-nums">{formatDuration(live.live_duration_seconds)}</Td>
-                    <Td><StageBadge auditResult={live.audit_result} /></Td>
-                    <Td className="text-ink-soft">
+                    <Td label="开播时间" className="tabular-nums">{formatDateTime(live.start_time)}</Td>
+                    <Td label="开播时长" className="tabular-nums">{formatDuration(live.live_duration_seconds)}</Td>
+                    <Td label="状态"><StageBadge auditResult={live.audit_result} /></Td>
+                    <Td label="未过审原因" className="text-ink-soft">
                       {stage === "pending" ? "审核中，请耐心等待" : (live.label ?? "—")}
                     </Td>
                   </tr>
@@ -173,8 +173,8 @@ function Th({ children, className }: { children: string; className?: string }) {
   return <th scope="col" className={clsx("px-4 py-2 font-medium", className)}>{children}</th>;
 }
 
-function Td({ children, className, title }: { children: React.ReactNode; className?: string; title?: string }) {
-  return <td title={title} className={clsx("px-4 py-2.5", className)}>{children}</td>;
+function Td({ children, className, title, label }: { children: React.ReactNode; className?: string; title?: string; label?: string }) {
+  return <td title={title} data-label={label} className={clsx("px-4 py-2.5", className)}>{children}</td>;
 }
 
 function PageButton({

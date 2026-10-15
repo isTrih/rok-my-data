@@ -18,7 +18,7 @@ const dateKey = (year: number, month: number, day: number) =>
 /**
  * 直播日历：按中国时区聚合过审场次，有效直播日（单日 > 1 小时）高亮。
  */
-export function LiveCalendar({ days, validDays }: { days: Map<string, LiveDayStat>; validDays: number }) {
+export function LiveCalendar({ days, validDays, compactLegend = false }: { days: Map<string, LiveDayStat>; validDays: number; compactLegend?: boolean }) {
   const anchor = useMemo(() => {
     const dates = [...days.keys()].sort();
     const target = dates.at(-1) ?? beijingToday();
@@ -101,7 +101,7 @@ export function LiveCalendar({ days, validDays }: { days: Map<string, LiveDaySta
       </div>
 
       <ul className="mt-3 flex flex-wrap gap-x-4 gap-y-1 text-xs text-ink-soft">
-        <Legend className="bg-brand">有效直播（单日 &gt; 1 小时）</Legend>
+        <Legend className="bg-brand">{compactLegend ? "有效直播" : "有效直播（单日 > 1 小时）"}</Legend>
         <Legend className="bg-brand-soft/60">有直播</Legend>
         <Legend className="border-2 border-brand-soft bg-transparent">当日</Legend>
       </ul>

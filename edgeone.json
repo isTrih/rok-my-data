@@ -1,0 +1,8 @@
+{
+  "rewrites": [
+    { "source": "/rok", "destination": "/index.html" },
+    { "source": "/rok/", "destination": "/index.html" },
+    { "source": "/tata", "destination": "/index.html" },
+    { "source": "/tata/", "destination": "/index.html" }
+  ]
+}

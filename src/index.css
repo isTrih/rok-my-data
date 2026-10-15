@@ -65,3 +65,260 @@
 .rise-fade {
   animation: rise-fade 0.45s ease-out both;
 }
+
+
+.project-home { max-width: 760px; margin: 12vh auto; padding: 24px; }
+.project-home h1 { font-size: 36px; font-weight: 800; margin-bottom: 12px; }
+@font-face { font-family: "TataDisplay"; src: url("/tata/fonts/FZGDCTJW-B.ttf") format("truetype"); font-display: swap; }
+html[data-project="tata"] { --font-sans: "Douyin Sans", "Microsoft YaHei", system-ui, sans-serif; --font-tata-display: "寒蝉全圆体 Bold", "Douyin Sans", "TataDisplay", sans-serif; --color-ink: #32233d; --color-ink-soft: #61503c; --color-brand: #4c2a70; --color-brand-soft: #8a50bb; --color-parchment: #fff2ad; background: #ffe082; }
+.tata-page { --canvas-width: min(100vw, 750px); max-width: 750px; min-height: 100vh; container-type: inline-size; background: url("/tata/background.png") no-repeat center top / 100% auto, url("/tata/background-repeat.png") repeat-y center calc(var(--canvas-width) * 2668 / 1500) / 100% auto; padding-top: min(35vw, 262px); }
+.tata-page .panel { min-height: 0; background: #fff9de; border: 3px solid #35223f; border-radius: 22px; box-shadow: 0 5px 0 #bd922a; padding: 24px; }
+.tata-page .panel > header { background: #ffe477; border-bottom: 2px solid #35223f; margin: -24px -24px 24px; padding: 14px 18px; border-radius: 18px 18px 0 0; }
+.tata-page .panel > header h2 { font-size: 22px; }
+.tata-page h2, .tata-page h3, .tata-number, .tata-share strong, .tata-total strong, .tata-page .font-semibold.tabular-nums { font-family: var(--font-tata-display); font-weight: 400; }
+.tata-page .tata-search-panel { min-height: 0; background: none; border: 0; box-shadow: none; padding: 22px 0 24px; }
+.tata-query-entry { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.tata-period-picker { position: relative; display: block; width: 100%; aspect-ratio: 983 / 280; background: url("/tata/period.png") no-repeat center / contain; }
+.tata-query-entry { display: grid; grid-template-columns: minmax(0, 1fr) minmax(100px, .66fr); gap: 16px; align-items: center; width: min(100%, 520px); margin: 0 auto; }
+.tata-support { margin: -6px auto 18px !important; color: #654687; text-align: center; font-size: 13px; line-height: 1.8; }
+.tata-period-picker select { appearance: none; width: 100%; height: 100%; border: 0; background: transparent; text-align: center; color: #fff2ad; font-family: var(--font-tata-display); font-size: clamp(20px, 5vw, 28px); padding: 0 12%; cursor: pointer; }
+.tata-period-picker[data-long-label="true"] select { font-size: clamp(12px, 2.9vw, 14px); }
+.tata-period-picker option { color: #32233d; background: #fff8d6; font-family: var(--font-sans); font-size: 16px; }
+.tata-period-picker select:focus-visible { outline: 3px solid #4c2a70; outline-offset: 4px; border-radius: 30px; }
+.tata-query-trigger { display: block; width: 100%; aspect-ratio: 536 / 168; background: url("/tata/query.png") no-repeat center / contain; border: 0; cursor: pointer; transition: transform 140ms, filter 140ms; }
+.tata-query-trigger:enabled:hover { filter: brightness(1.08); }
+.tata-query-trigger:active { transform: scale(.97); }
+.tata-query-trigger:disabled { opacity: .65; cursor: wait; }
+.tata-id-dialog { width: min(94vw, 625px); max-width: none; padding: 0; border: 0; margin: auto; background: transparent; overflow: visible; color: #32233d; }
+.tata-id-dialog::backdrop { background: #211829a6; }
+.tata-id-dialog[open] { animation: modal-in 180ms ease-out; }
+.tata-id-dialog form { position: relative; width: 100%; aspect-ratio: 1250 / 608; background: url("/tata/input.png") no-repeat center / contain; }
+.tata-id-dialog input { position: absolute; left: 16.5%; top: 38%; width: 68%; height: 19%; padding: 0 12px; border: 0; border-radius: 16px; background: transparent; color: #32233d; font-size: clamp(15px, 3.7vw, 22px); outline: none; }
+.tata-id-dialog input:focus-visible { outline: 2px solid #8a50bb; outline-offset: -3px; }
+.tata-modal-close { position: absolute; top: 2%; right: 2%; width: 34px; height: 34px; border-radius: 50%; background: #fff2ad; border: 2px solid #32233d; font-size: 28px; line-height: 26px; cursor: pointer; }
+.tata-confirm { position: absolute; left: 32%; top: 70%; width: 36%; aspect-ratio: 536 / 168; background: url("/tata/confirm.png") no-repeat center / contain; cursor: pointer; transition: transform 140ms; }
+.tata-confirm:disabled { opacity: .5; cursor: default; }
+.tata-confirm:active { transform: scale(.97); }
+.tata-page .tata-metric-grid > .panel { min-height: 82px; background: #fff9de; border: 2px solid #725989; border-radius: 13px; box-shadow: 0 3px 0 #cfb762; padding: 0; overflow: hidden; gap: 0; }
+.tata-page .tata-metric-grid > .panel .text-xs { position: static; display: grid; place-items: center; width: 100%; min-height: 28px; padding: 5px 2px; border-bottom: 1px solid #d4b650; background: #ffe68e; font-size: 11px; font-weight: 700; color: #594568; }
+.tata-page .tata-metric-grid > .panel > span:nth-child(2) { position: static; display: grid; place-items: center; width: 100%; flex: 1; padding: 10px 2px; font-size: clamp(16px, 4vw, 23px); font-weight: 800; }
+.tata-overview-grid .tata-share > p { font-weight: 700; }
+.tata-overview-grid .tata-share-visual { gap: 14px; }
+.tata-page .panel h2 > span[aria-hidden] { width: 20px; height: 20px; border-radius: 0; background: url("/tata/star.png") center / contain no-repeat; }
+.tata-intro { text-align: center; }
+.tata-intro h2 { font-size: 23px; margin-bottom: 14px; }
+.tata-intro p { line-height: 1.8; }
+.tata-help { margin-top: 18px; color: var(--color-ink-soft); font-size: 14px; }
+.tata-page .tata-result-head { min-height: 0; display: flex; justify-content: space-between; align-items: center; gap: 12px; padding: 18px 22px; }
+.tata-result-head h2 { font-size: 25px; }
+.tata-result-head p, .tata-result-head > span { font-size: 13px; color: var(--color-ink-soft); }
+.tata-share { min-width: 0; }
+.tata-share > p:first-of-type { font-size: 14px; }
+.tata-share-visual { margin-top: 10px; }
+.tata-drawn-meter { position: relative; width: 100%; height: 34px; padding: 3px 0 3px 32px; }
+.tata-meter-cap { position: absolute; top: 1px; left: 0; z-index: 1; display: grid; place-items: center; width: 30px; height: 32px; background: #fff1a9; border: 2px solid #725989; border-radius: 11px; transform: rotate(-5deg); }
+.tata-meter-cap img { width: 20px; height: 20px; }
+.tata-meter-well { position: relative; height: 28px; border: 2px solid #725989; border-radius: 10px; background: #e8e0ef; overflow: hidden; }
+.tata-meter-fill { position: absolute; top: 0; left: 0; height: 100%; background: linear-gradient(0deg, #ffc744, #ffe683); box-shadow: 1px 0 3px #bd852e70; transition: width 500ms ease-out; }
+.tata-share .tata-meter-well strong { position: absolute; top: 50%; right: 3px; transform: translateY(-50%); border-radius: 6px; padding: 1px 5px; background: #fff9dee6; color: #654687; font-size: 12px; line-height: 1.5; white-space: nowrap; }
+.tata-video-body .tata-number { font-size: clamp(28px, 7vw, 40px); }
+.tata-video-body > div > p:last-child { font-size: 13px; }
+.tata-live-body .tata-stats { font-size: 12px; gap: 10px; }
+.tata-live-body .tata-stats > div { flex-wrap: wrap; gap: 3px 8px; padding-bottom: 7px; }
+.tata-live-body .tata-stats dd { margin-left: auto; }
+.tata-history { display: grid; gap: 8px; padding: 14px 18px; border: 3px solid #35223f; border-radius: 16px; background: #fff9de; margin-top: 10px; font-size: 14px; }
+.tata-history select { min-width: 0; width: 100%; padding: 10px; border: 2px solid #35223f; border-radius: 10px; background: #fffdf4; }
+.tata-loading { width: min(80vw, 290px); margin: auto; padding: 30px; background: #fff9de; border: 3px solid #35223f; border-radius: 24px; color: #35223f; text-align: center; box-shadow: 0 6px 0 #211629; font-family: var(--font-sans); }
+.tata-loading::backdrop { background: #2118298c; backdrop-filter: blur(4px); }
+.tata-loading p { margin-top: 18px; font-size: 18px; font-weight: 700; }
+.tata-loading-stars { display: flex; gap: 10px; justify-content: center; padding: 10px 0; }
+.tata-loading-stars img { width: 34px; height: 34px; animation: loading-bounce 800ms ease-in-out infinite; }
+.tata-loading-track { height: 7px; margin-top: 20px; border-radius: 8px; background: #eadfab; overflow: hidden; }
+.tata-loading-track span { display: block; width: 40%; height: 100%; border-radius: inherit; background: #b685dc; animation: loading-slide 1100ms ease-in-out infinite alternate; }
+.tata-notice { overflow: hidden; border: 2px solid #35223f; border-radius: 18px; background: #fff9de; }
+.tata-notice > h2 { padding: 16px 20px; background: #ffe477; font-weight: 700; font-size: 20px; border-bottom: 2px solid #35223f; }
+.tata-notice > div { padding: 20px; font-size: 14px; line-height: 1.9; }
+.tata-notice p + p { margin-top: 14px; }
+@keyframes loading-bounce { 0%, 100% { transform: translateY(3px) rotate(-8deg); } 50% { transform: translateY(-7px) rotate(8deg); } }
+@keyframes loading-slide { from { transform: translateX(-30%); } to { transform: translateX(180%); } }
+.share-detail { font-size: 13px; color: var(--color-ink-soft); }
+.tata-total { border-top: 1px solid #cfae50; padding-top: 20px; margin-top: 22px; font-size: 14px; }
+.tata-total strong { margin-left: 12px; font-size: 26px; font-variant-numeric: tabular-nums; }
+.tata-total span { display: block; font-size: 13px; margin-top: 5px; color: var(--color-ink-soft); }
+.tata-tabs { display: flex; padding: 0 0 8px; gap: 5px; border-bottom: 1px solid #cfae50; }
+.tata-tabs button { flex: 1; padding: 14px 6px; font-size: 14px; border-radius: 10px; cursor: pointer; transition: background-color 180ms, color 180ms, transform 100ms; }
+.tata-tabs button[aria-selected="true"] { background: #4c2a70; color: #fffdf5; font-weight: 700; }
+.tata-tabs button:hover { background: #e8c355; color: #32233d; }
+.tata-tabs button:active { transform: scale(.98); }
+.tata-tabs button:focus-visible { outline: 2px solid #4c2a70; outline-offset: 2px; }
+.tata-tab-content { padding: 24px 0 0; font-size: 14px; }
+.tata-label { font-size: 14px; color: var(--color-ink-soft); }
+.tata-number { font-size: 40px; line-height: 1.5; font-variant-numeric: tabular-nums; }
+.rank-band { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 14px; color: var(--color-brand); font-weight: 700; }
+.rank-band span { flex-basis: 100%; font-size: 13px; font-weight: 400; color: var(--color-ink-soft); }
+.tata-formula { font-size: 13px; line-height: 1.8; margin-top: 18px; color: var(--color-ink-soft); }
+.tata-stats { display: grid; gap: 12px; align-content: start; }
+.tata-stats > div { display: flex; justify-content: space-between; gap: 12px; padding-bottom: 10px; border-bottom: 1px solid #cfae50; }
+.tata-stats dd { font-weight: 700; font-variant-numeric: tabular-nums; }
+.tata-qualified { padding: 22px 0; margin-top: 22px; border-top: 1px solid #cfae50; border-bottom: 1px solid #cfae50; }
+.tata-qualified h3 { font-size: 17px; }
+.tata-qualified > p { margin: 8px 0 16px; font-size: 13px; line-height: 1.8; }
+.pool-status { padding: 12px 16px; background: #fff5ce; border-radius: 12px; font-size: 14px; }
+.tata-page .panel:has(> [aria-label="未过审明细"]) { min-height: 0; padding: 0; background: #fff8d6; border: 2px solid #b18b0b; border-radius: 14px; }
+.tata-review { overflow: hidden; border: 3px solid #35223f; border-radius: 22px; background: #fff9de; box-shadow: 0 5px 0 #bd922a; }
+.tata-review-heading { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 18px 20px; background: #ffe477; border-bottom: 2px solid #35223f; }
+.tata-review-heading h2 { display: flex; align-items: center; gap: 8px; font-size: 22px; }
+.tata-review-heading h2 img { width: 24px; height: 24px; object-fit: contain; }
+.tata-review-heading > span { font-size: 13px; color: #61503c; }
+.tata-review-tabs { display: flex; gap: 10px; padding: 16px 20px 0; }
+.tata-review-tabs button { display: flex; align-items: center; gap: 8px; padding: 8px 14px; border: 2px solid transparent; border-radius: 12px; font-size: 14px; cursor: pointer; transition: background 160ms; }
+.tata-review-tabs button[aria-selected="true"] { background: #4c2a70; color: #fff9de; }
+.tata-review-tabs button span { padding: 0 6px; border-radius: 6px; background: #ffffff26; font-size: 12px; }
+.tata-review-list { padding: 4px 20px 18px; }
+.tata-review-item { padding: 20px 0; border-bottom: 1px dashed #d8bc67; }
+.tata-review-item:last-child { border-bottom: 0; padding-bottom: 4px; }
+.tata-review-item-head { display: flex; align-items: start; gap: 10px; }
+.tata-review-index { flex: none; display: grid; place-items: center; width: 26px; height: 26px; border-radius: 8px; background: #ffe88b; font-weight: 700; font-size: 13px; }
+.tata-review-item-head h3 { flex: 1; font-family: var(--font-sans); font-size: 15px; font-weight: 700; line-height: 1.7; overflow-wrap: anywhere; }
+.tata-review-status { flex: none; padding: 4px 8px; border-radius: 8px; font-size: 12px; font-weight: 700; }
+.tata-review-status.is-pending { color: #745114; background: #ffedb2; }
+.tata-review-status.is-rejected { color: #9b343b; background: #ffe0d8; }
+.tata-review-reason, .tata-review-meta { margin: 9px 0 0 36px; font-size: 13px; line-height: 1.8; color: #61503c; overflow-wrap: anywhere; }
+.tata-review-item > a { display: inline-block; margin: 12px 0 0 36px; color: #4c2a70; font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 4px; }
+.tata-review-pagination { display: flex; justify-content: center; align-items: center; gap: 20px; padding: 12px; border-top: 1px solid #e7ce85; font-size: 13px; }
+.tata-review-pagination button { width: 34px; height: 34px; border: 2px solid #35223f; border-radius: 10px; background: #ffe477; font-size: 22px; cursor: pointer; }
+.tata-review-pagination button:disabled { opacity: .35; cursor: default; }
+.tata-rank-award { display: flex; align-items: center; gap: 18px; width: fit-content; margin: 18px 0 4px; padding: 8px 4px; }
+.tata-rank-medal { flex: none; width: 64px; height: 74px; overflow: visible; }
+.tata-rank-award > div { display: grid; justify-items: start; gap: 7px; }
+.tata-rank-award strong { color: #654687; font-family: var(--font-tata-display); font-size: 22px; line-height: 1.4; }
+.tata-rank-award > div > span { font-size: 13px; color: #76654d; }
+.tata-rank-award small { padding: 3px 10px; border-radius: 20px; background: #f0e8fa; color: #816398; font-size: 12px; }
+.tata-calendar-trigger { display: flex; align-items: center; justify-content: space-between; gap: 24px; width: 100%; margin-top: 22px; padding: 14px 16px; border: 2px solid #35223f; border-radius: 12px; background: #ffe477; color: #35223f; font-weight: 700; font-size: 14px; cursor: pointer; box-shadow: 0 3px 0 #bd922a; }
+.tata-calendar-dialog { width: min(94vw, 620px); max-height: 88dvh; overflow-y: auto; margin: auto; padding: 24px; border: 3px solid #35223f; border-radius: 22px; background: #fff9de; color: var(--color-ink); }
+.tata-calendar-dialog::backdrop { background: #2118299c; backdrop-filter: blur(3px); }
+.tata-calendar-dialog > header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; }
+.tata-calendar-dialog h2 { font-family: var(--font-tata-display); font-size: 24px; }
+.tata-calendar-dialog > header button { width: 34px; height: 34px; border: 2px solid #35223f; border-radius: 50%; background: #ffe477; font-size: 26px; line-height: 26px; cursor: pointer; }
+@keyframes modal-in { from { opacity: 0; transform: translateY(8px) scale(.98); } to { opacity: 1; transform: none; } }
+@media (max-width: 480px) {
+  .tata-metric-grid .panel .text-xs { font-size: 9px; }
+  .tata-overview-grid .tata-share > p { font-size: 12px; }
+  .tata-overview-grid .tata-share-visual { gap: 8px; }
+
+  .tata-overview-grid .tata-share strong { font-size: 18px; white-space: nowrap; }
+  .tata-page .tata-result-head { align-items: start; flex-direction: column; }
+  .tata-tabs { flex-direction: column; }
+  .tata-tabs button { font-size: 13px; padding: 12px 5px; }
+  .tata-page .pending-details table { min-width: 0; }
+  .tata-page .pending-details thead { display: none; }
+  .tata-page .pending-details tbody, .tata-page .pending-details tr { display: block; width: 100%; }
+  .tata-page .pending-details td { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 10px; text-align: left; overflow-wrap: anywhere; }
+  .tata-page .pending-details td::before { content: attr(data-label); color: var(--color-ink-soft); }
+  .tata-page .pending-details td > span { justify-self: start; }
+}
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation: none !important; transition: none !important; scroll-behavior: auto !important; }
+}
+
+/* Softer surfaces contrast with the original yellow game backdrop. */
+html[data-project="tata"] { --tata-surface: #fdfcff; --tata-tint: #f0eafa; --tata-edge: #77628d; }
+.tata-page { position: relative; container-type: normal; padding-left: clamp(24px, 5vw, 38px); padding-right: clamp(24px, 5vw, 38px); }
+.tata-content { position: relative; z-index: 2; }
+.tata-page .panel, .tata-review { background: var(--tata-surface); border: 2px solid var(--tata-edge); box-shadow: 0 5px 0 #70558a24; }
+.tata-page .panel > header, .tata-review-heading { background: var(--tata-tint); border-bottom: 1px solid #d6c9e7; }
+.tata-page .tata-search-panel { background: none; border: 0; box-shadow: none; }
+.tata-page .tata-metric-grid > .panel { background: var(--tata-surface); border-color: var(--tata-edge); box-shadow: 0 3px 0 #70558a24; }
+.tata-page .tata-metric-grid > .panel .text-xs { background: #eee5f8; border-color: #d4c7e3; font-size: 14px; font-weight: 900; padding: 8px 1px; }
+.tata-notice { background: var(--tata-surface); border-color: var(--tata-edge); }
+.tata-notice > h2 { background: var(--tata-tint); border-bottom-color: #d6c9e7; }
+.tata-page .tata-result-head { display: block; padding: 10px 4px 14px; color: rgb(59 39 82 / 78%); }
+.tata-result-head h2 { font-family: "YouSheBiaoTiHei", var(--font-tata-display); font-size: clamp(34px, 8vw, 50px); line-height: 1.25; margin-top: 6px; font-weight: 900; overflow-wrap: anywhere; }
+.tata-result-head p { color: rgb(59 39 82 / 67%); font-size: 13px; }
+.tata-watermark { position: fixed; inset: 0; z-index: 1; overflow: hidden; pointer-events: none; user-select: none; opacity: .085; }
+.tata-watermark-pattern { position: absolute; width: 220vw; height: 240vh; left: -60vw; top: -70vh; transform: rotate(-26deg); display: flex; flex-direction: column; justify-content: space-around; }
+.tata-watermark-row { display: flex; justify-content: space-around; gap: 54px; white-space: nowrap; }
+.tata-watermark-row { display: block; }
+.tata-watermark-track { display: flex; width: max-content; }
+.tata-watermark-group { display: flex; flex: none; gap: 54px; padding-right: 54px; }
+.tata-watermark-row span { flex: none; font-family: "YouSheBiaoTiHei", sans-serif; font-size: clamp(40px, 5vw, 76px); font-weight: 900; color: #59406d; line-height: 1.2; }
+.tata-watermark-row .is-outline { color: transparent; -webkit-text-stroke: 1.5px #59406d; }
+@media (min-width: 900px) { .tata-watermark { opacity: .045; } }
+.tata-video-columns { display: grid; gap: 24px; }
+.tata-video-columns > section { min-width: 0; display: flex; align-items: center; flex-direction: column; text-align: center; }
+.tata-video-columns > section + section { border-left: 1px dashed #dacfe7; padding-left: 24px; }
+.tata-video-columns h3 { font-size: 19px; line-height: 1.5; color: #654687; }
+.tata-video-combined .tata-rank-award { flex-direction: column; justify-content: center; gap: 6px; margin: 18px 0 20px; padding: 0; }
+.tata-video-combined .tata-rank-medal { width: 58px; height: 67px; }
+.tata-video-combined .tata-rank-award > div { justify-items: center; gap: 5px; }
+.tata-video-combined .tata-rank-award > div > span { display: none; }
+.tata-video-combined .tata-rank-award strong { font-size: 18px; }
+.tata-video-data { margin: 0 0 20px; }
+.tata-video-data > p:last-child { font-size: 13px; }
+.tata-video-combined .tata-number { font-size: clamp(24px, 5vw, 36px); line-height: 1.4; }
+.tata-video-combined .tata-share { width: 100%; max-width: 250px; margin-top: auto; }
+.tata-video-combined .tata-share > p { font-size: 13px; }
+.tata-meter-fill { transition: none; }
+.tata-content { z-index: auto; }
+.tata-content > .tata-search-panel, .tata-results > .tata-result-head { position: relative; z-index: 3; }
+.tata-results .panel > div, .tata-results .panel > p, .tata-results .panel > button,
+.tata-results .panel > header h2, .tata-review-heading > *, .tata-review-tabs,
+.tata-review-list, .tata-review-pagination, .tata-notice > div, .tata-notice > h2 > span { position: relative; z-index: 3; }
+.tata-page .tata-metric-grid > .panel { animation: none; }
+.tata-page .tata-metric-grid > .panel > span { position: relative; z-index: 3; }
+.tata-page .tata-metric-grid > .panel .text-xs { background: transparent; }
+.tata-page .tata-metric-grid > .panel::before { content: ""; position: absolute; inset: 0 0 auto; height: 36px; background: #eee5f8; }
+.tata-rank-line { display: flex; align-items: center; justify-content: center; gap: 6px; white-space: nowrap; }
+.tata-video-combined .tata-rank-award strong { font-size: 16px; }
+.tata-video-combined .tata-rank-award small { font-size: 10px; padding: 2px 5px; }
+.tata-live-columns { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 24px; }
+.tata-live-feature { display: flex; flex-direction: column; align-items: center; min-width: 0; text-align: center; }
+.tata-live-feature + .tata-live-feature { border-left: 1px dashed #dacfe7; padding-left: 24px; }
+.tata-live-feature h3 { font-size: 18px; font-weight: 700; color: #654687; }
+.tata-live-feature .tata-rank-award { flex-direction: column; gap: 6px; margin: 18px 0 20px; padding: 0; }
+.tata-live-feature .tata-rank-award > div { justify-items: center; }
+.tata-live-feature .tata-rank-award > div > span { display: none; }
+.tata-live-feature .tata-rank-award strong { font-size: 16px; }
+.tata-live-feature .tata-rank-award small { font-size: 10px; padding: 2px 5px; }
+.tata-live-feature .tata-rank-medal { width: 58px; height: 67px; }
+.tata-live-data { margin: 20px 0; }
+.tata-live-feature .tata-number { font-size: 32px; font-weight: 700; }
+.tata-live-feature .tata-share { width: 100%; margin-top: auto; }
+.tata-live-stats { display: grid; grid-template-columns: 1fr 1fr 1.4fr; gap: 12px; margin-top: 26px; padding-top: 22px; border-top: 1px solid #dacfe7; text-align: center; }
+.tata-live-stats dd { font-family: var(--font-tata-display); font-size: 22px; font-weight: 800; white-space: nowrap; }
+.tata-live-stats dd small { font-size: 12px; padding-left: 3px; }
+.tata-live-stats dt { margin-top: 6px; font-size: 12px; color: #76654d; }
+.tata-label, .tata-category > h3, .tata-share > p { font-weight: 700; }
+.tata-floating-support { position: fixed; right: 16px; bottom: 20px; z-index: 20; display: flex; align-items: center; gap: 9px; max-width: calc(100vw - 60px); padding: 14px 36px 14px 14px; border: 2px solid #a58ab8; border-radius: 22px 22px 6px 22px; background: #fffaff; color: #654687; box-shadow: 0 6px 18px #67477824; }
+.tata-floating-support > img { width: 28px; height: 28px; object-fit: contain; }
+.tata-floating-support > div { display: grid; gap: 4px; }
+.tata-floating-support span { font-size: 11px; color: #9b80ad; }
+.tata-floating-support strong { font-family: var(--font-tata-display); font-size: 14px; }
+.tata-floating-support button { position: absolute; top: 4px; right: 4px; width: 28px; height: 28px; border: 0; border-radius: 50%; background: #f1eafa; font-size: 20px; color: #8e72a4; cursor: pointer; }
+@media (max-width: 480px) {
+  .tata-page .panel { padding: 20px; }
+  .tata-page .panel > header { margin: -20px -20px 20px; padding: 14px 16px; }
+  .tata-page .tata-search-panel { padding: 22px 0 20px; }
+  .tata-page .tata-metric-grid > .panel { padding: 0; }
+  .tata-page .tata-metric-grid > .panel .text-xs { font-size: 12px; white-space: nowrap; }
+  .tata-video-columns { gap: 14px; }
+  .tata-video-columns > section + section { padding-left: 14px; }
+  .tata-video-columns h3 { font-size: 16px; }
+  .tata-video-combined .tata-rank-award strong { font-size: 13px; }
+  .tata-rank-line { gap: 3px; }
+  .tata-live-columns { gap: 14px; }
+  .tata-live-feature + .tata-live-feature { padding-left: 14px; }
+  .tata-live-feature .tata-rank-award strong { font-size: 13px; }
+  .tata-live-feature .tata-number { font-size: 28px; }
+  .tata-live-stats dd { font-size: 18px; }
+  .tata-video-combined .tata-label { font-size: 12px; }
+}
+
+/* GSAP owns these transforms, including when the OS requests reduced motion. */
+.tata-loading-stars img, .tata-loading-track span { animation: none; }
+.tata-loading { background: #fffaff; border-color: #9b7daf; box-shadow: 0 12px 50px #35223f26; }
+.tata-loading-track { background: #eee5f8; height: 8px; }
+.tata-loading-track span { background: linear-gradient(90deg, #c5a2e4, #f4c963); }
+.tata-rank-medal, .tata-watermark-track { will-change: transform; }
+
+.tata-page .tata-metric-grid > .panel { position: relative; }

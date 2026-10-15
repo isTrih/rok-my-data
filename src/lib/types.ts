@@ -22,6 +22,8 @@ export interface VideoMetric {
 }
 
 export interface VideoRow {
+  audit_extra?: { extra_tag?: unknown };
+  extra_tag?: unknown;
   video_id: string;
   publish_time: string | null;
   author_name: string | null;

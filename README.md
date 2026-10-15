@@ -1,106 +1,79 @@
-# 万国觉醒创作营 · 活动数据查询
+# 活动数据查询
 
-React + Vite + Tailwind CSS 前端，使用 EdgeOne Makers Edge Function 代理数据查询，支持创作者查询视频与直播数据，展示播放量、直播 PV、加权 ACU*、有效直播天数等核心指标，并在数据增长时提供动画反馈与礼花庆祝效果。
+React + Vite + TypeScript 前端，使用 EdgeOne Edge Function 代理上游接口。
 
-## 功能特性
+## 独立活动路由
 
-- **查询前**：活动头图（占位）、简介、表单（创作者 key + 期数选择），输入内容缓存在浏览器；成功查询后会在本地保存姓名与 key，下次可从姓名下拉列表选取
-- **查询后（未查到数据）**：提示用户联系微信小助手「洛洛」
-- **查询后（有数据）**：
-  - 概览指标卡：播放量、过审稿件数量、直播 PV、直播加权 ACU*、过审场次
-  - 视频数据：过审数量、过审播放量，若播放量 < 10万 展示占比环形图
-  - 直播数据：过审场次、加权 ACU*、总 PV、有效直播天数，若 ACU* < 10 展示占比环形图，附带直播日历（按中国时区聚合，有效天高亮）
-  - 未过审明细：两个 Tab（视频未过审 / 直播未过审），审核中优先展示，支持分页
-- **增长反馈**：与上次缓存对比，指标增长时触发卡片高亮动画与礼花效果
+- `/rok`：项目 1，保留万国觉醒原有查询页。
+- `/tata`：项目 3，塔塔冒险队激励计划；`/tata?act=61` 可指定期数，优先于本机缓存，仍可手动更改。无效或其他项目期数会提示并回退到当前项目可选期数。
+- `/`：兼容原入口，替换浏览器地址为 `/rok`。
+- 活动页互不展示其他活动入口；未知路径显示不存在。
+- `edgeone.json` 为两个子路径及尾斜杠配置静态回退，API 路径不会被改写。
 
-## 技术栈
+## 本地开发
 
-- **框架**：React 19 + TypeScript
-- **构建工具**：Vite 8 + @vitejs/plugin-react + @tailwindcss/vite
-- **包管理器**：Bun
-- **样式**：Tailwind CSS v4（inline @theme）
-- **动画**：Motion（未使用）、canvas-confetti（礼花）
-- **后端对接**：浏览器请求同源 `/api`，Edge Function 从云环境变量 `auth` 读取认证值并转发到上游
-
-## 开发与构建
-
-```bash
-# 安装依赖
-bun install
-
-# 启动前端开发服务器（http://localhost:3000，支持 HMR）
-bun run dev
-
-# 类型检查
-bun run typecheck
-
-# 构建生产静态资源到 dist/
-bun run build
-
-# 预览构建结果
-bun run preview
-
-# 类型检查 + 构建
-bun run check
+```sh
+npm install
+npm run dev -- --host 127.0.0.1
 ```
 
-## 部署
+浏览器打开 `http://localhost:3000/tata` 或 `/rok`。本地 Vite 已代理 `/api` 到同一份 Edge Function，支持真实数据查询。
 
-在 EdgeOne Makers 项目中将构建命令设为 `bun run build`、静态资源目录设为 `dist`，并在云环境变量 `auth` 中只配置令牌本身（不含 `Bearer` 和空格）。函数会自动发送 `Authorization: Bearer <auth>`。代码推送到关联的 Git 仓库后，Makers 会同时发布静态资源和仓库根目录的 `edge-functions/`。`auth` 仅在 Edge Function 中读取，不写入仓库或浏览器代码。
+在根目录 `.env` 中设置 `auth=<令牌>`，仅填写令牌本身，不带 `Bearer`。`.env` 被 Git 忽略。该变量仅在服务端读取，严禁改为 `VITE_auth`。修改 `.env` 后 Vite 会重新加载；若没有生效，重启开发服务。`.env.example` 不含凭据。
 
-本地单独运行 Vite 时只有前端静态资源；需要调用 `/api` 时，请使用支持 Functions 的 EdgeOne 本地开发环境或已发布站点。
+生产环境仍由 Edge Function 的 `env.auth` 读取认证。静态构建命令为 `npm run build`，输出为 `dist`。
 
-## 项目结构
+## 塔塔查询流程
 
+活动期数与查询按钮并排显示。点击查询后，在素材弹窗中输入创作者 ID。支持 Enter 提交、Esc/关闭按钮/遮罩关闭、焦点约束和恢复；关闭时保留输入。查询区域下方显示“有疑问可私聊花火/HaHa”，底部完整展示用户提供的活动数据说明。历史姓名、创作者 ID、期数列表和最近 5 次结果缓存在本机，刷新可恢复，且与 ROK 隔离。输入弹窗可选择历史姓名与 ID。
+
+个人查询仍通过 `conditions: { key: 输入的创作者ID }` 精确检索上游审核扩展字段；创作者 ID 是该项目的查询凭证名称。个人视频和直播分别完整分页，单页 500 条。
+
+## 塔塔统计口径
+
+仅统计选定期次内审核通过的内容。视频使用最新播放量快照，直播场观只使用 `live_exposure_pv`。
+
+- 视频总播放占比 = 我的过审视频播放量 / 全体过审视频播放量。
+- 直播总场观占比 = 我的过审直播 PV / 全体过审直播 PV。
+- **塔塔攻略悬赏**：`audit_extra.extra_tag` 为“攻略”的个人播放 / 该分类全体播放。
+- **塔塔创意乐园**：`audit_extra.extra_tag` 为“二创”的个人播放 / 该分类全体播放。
+- 加权 ACU = Σ(ACU × 时长) / Σ时长；缺少 ACU 或时长不大于 0 的场次不参与分子和分母。
+- 有效直播日沿用原项目：北京时间单日过审直播累计时长 **超过 1 小时**。
+- 达标主播须同时满足有效天数 **≥15 天**、过审时长 **≥45 小时**、场观 **≥20,000 PV**。
+- 达标占比 = 查询者各账号中已达标账号的过审 PV / 全体达标主播的过审 PV；未达标账号贡献 0。
+- 当前活动总场观包含当期所有过审直播，包含未达标主播。
+- 排名按创作者 UID 分组，展示前 3 / 前 10 / 前 30 名区间，含并列；合并多个账号查询时不展示个人排名。没有 UID 的内容计入总量，但不计入个人排行榜或达标池。
+- 没有分母数据时显示暂无数据，不以假百分比替代；汇总失败保留个人数据并提示重查。
+
+`POST /api/tata/pools` 只接收期次 ID，服务端验证其属于项目 3，通过内容配置和分页接口遍历当期数据，再返回匿名总量和排名分界值。其他人的 ID、姓名、内容和查询凭据不会通过该接口返回浏览器。
+
+### 当前真实接口核对
+
+2026-10-15，项目 3 十月期次为 61。总视频播放、直播 PV 汇总已联通；当时返回的视频 `audit_extra` 为空，按“攻略”“二创”精确查询均无命中。分类代码已支持字符串、标签数组和历史 `{type,value}` 包装，需上游返回 `audit_extra.extra_tag` 后才能展示实际分类占比。
+
+## 素材与布局
+
+用户提供的切图与字体复制至 `public/tata/`，不依赖开发机原始目录。主画布最大 750px，外背景纯色，菱格背景在画布内持续续接。背景、期数牌、按钮和 ID 弹窗保留原素材比例；指标卡及大内容卡均自绘，统一圆角描边与黄紫配色。指标卡固定四列、概览固定两列，统计与占比并排，提高密度。占比使用自绘横条、连续填充与内嵌约数，低比例保留最小可见填充，不显示精确比值。
+
+攻略悬赏与创意乐园合在同一卡片，左右两栏依次居中展示奖章、数据和进度条；直播独立成卡，零数据模块隐藏。排名使用花形奖牌，仅展示直播 ACU 排名与各视频分类排名，不展示直播 PV 排名。日历默认隐藏，按钮打开模态弹窗。查询使用带动画的模态加载遮罩，覆盖个人数据查询和活动汇总阶段。
+
+字体使用用户指定的 Douyin Sans 与寒蝉全圆体 Bold，已通过 `scripts/vendor-fonts.mjs` 本地化到 `public/tata/fonts`，避免预览环境外链拦截；浏览器按 Unicode 子集加载。来源为用户提供的 cn-font.claude-code-best.win 两个样式文件。
+
+## 验证
+
+```sh
+npm run typecheck
+npm test
+# 开发服务启动后，且安装 Playwright 与浏览器时：
+npm run test:browser
 ```
-src/
-├── lib/
-│   ├── api.ts              # 同源 API 请求封装
-│   ├── types.ts            # 接口类型定义
-│   ├── metrics.ts          # 加权 ACU、日历聚合、审核分类、结果构建
-│   ├── format.ts           # 格式化工具（千分位、时长、标题脱敏、链接）
-│   ├── storage.ts          # LocalStorage 缓存（表单、快照、历史姓名与 key）
-│   └── celebrate.ts        # 增长对比与礼花效果
-├── components/
-│   ├── Frame.tsx           # Panel 容器、头图占位
-│   ├── SearchForm.tsx      # 查询表单（创作者 key + 期数）
-│   ├── EmptyState.tsx      # 未查到数据提示、活动简介
-│   ├── MetricCard.tsx      # 指标卡（含增长动画）
-│   ├── ShareDonut.tsx      # 占比环形图（不展示具体百分比）
-│   ├── LiveCalendar.tsx    # 直播日历（有效天高亮）
-│   ├── PendingTabs.tsx     # 未过审 Tab 表格（审核中优先）
-│   └── ResultView.tsx      # 查询结果总览（概览→直播→视频→未过审）
-├── App.tsx                 # 主应用（查询编排、缓存对比、动画触发）
-├── main.tsx                # React 入口
-├── index.css               # Tailwind 主题与自定义动画
-└── vite-env.d.ts           # Vite 环境类型
 
-edge-functions/api/[[default]].js # Edge Function：仅转发 4 个查询接口
-vite.config.ts              # Vite 配置（React + Tailwind）
-tsconfig.json               # TypeScript 配置
-package.json                # 依赖与脚本
-index.html                  # HTML 入口
-```
+已使用 Node 24 检查。浏览器脚本可通过 `PLAYWRIGHT_MODULE` 指定已有 Playwright 包路径，通过 `BROWSER_CHANNEL=msedge` 使用本机 Edge。测试使用隔离浏览器和合成数据，不创建生产记录。
 
-## API 接口
+覆盖分页、审核过滤、分类、门槛等于边界、加权 ACU 缺失值、缓存隔离、ROK 回归、手机/桌面布局、弹窗与失败状态。截图存于被 Git 忽略的 `artifacts/`；视觉取舍和复核见 `DESIGN.md`。
 
-- `GET /api/v1/queries/projects` - 查询活动期次列表（前端仅使用 project_id=1 的 ROK 期数）
-- `POST /api/v1/queries/v2/audit-extra/search` - 按 key 精确查询用户视频与直播明细
-- `POST /api/v1/queries/v2/audit-extra/video-play/author-total-below` - 播放量低于门槛的作者总播放（对比用）
-- `POST /api/v1/queries/v2/audit-extra/live-pv/weighted-acu-below` - 加权 ACU 低于门槛的主播总 PV（对比用）
+## 当前视觉与动效
 
-以上路径由同源 Edge Function 处理。它只接受列出的路径和方法，向上游附加从 `auth` 云环境变量读取的认证值，并原样返回上游状态码和响应内容。请在 Makers 中配置环境变量后再发布。
+内容区与黄色游戏背景留出更大的侧边距，卡片使用浅白底与淡紫标题区，顶部四项标题加大加粗。作者信息直接用半透明优设标题黑粗体展示，不再使用信息卡。全屏姓名水印位于背景与内容之间，斜向排列，交替使用实字与线框字，宽屏透明度进一步降低。
 
-## 数据说明
-
-- **加权 ACU*** = Σ(acu × 直播时长) / Σ(直播时长)，仅统计过审场次
-- **有效直播日**：按中国时区（+08:00）聚合，单日过审时长累计超过 1 小时
-- **审核状态**：
-  - 审核通过：`audit_result === "审核通过"`
-  - 审核不通过：`audit_result === "审核不通过"`
-  - 审核中：既不是通过也不是不通过（含空值），在未过审明细中优先展示
-- **标题脱敏**：前 5 字符 + `...` + 后 5 字符（总长 ≤ 13 时不脱敏）
-
-## License
-
-MIT
+优设标题黑与其他字体一起本地化。GSAP 为占比提供进入视口后的连续填充，为奖牌和星形元素提供轻摆/回弹。动画仅在进入视口时有限播放，组件卸载、数据更新或切换减少动态效果时清理，不重复无限晃动。Bun 锁文件已同步 GSAP 依赖。
