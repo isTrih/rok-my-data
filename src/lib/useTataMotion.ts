@@ -14,6 +14,7 @@ export function useTataMotion(root: RefObject<HTMLDivElement | null>, ready: boo
           context.add(() => {
             if (entry.target.classList.contains("tata-meter-fill")) {
               gsap.fromTo(entry.target, { scaleX: 0, transformOrigin: "left center" }, { scaleX: 1, duration: 0.9, ease: "power3.out" });
+              gsap.fromTo(entry.target, { backgroundPosition: "100% 0" }, { backgroundPosition: "-100% 0", duration: 2.8, repeat: -1, delay: .9, ease: "sine.inOut" });
               const star = entry.target.closest(".tata-drawn-meter")?.querySelector(".tata-meter-cap");
               if (star) gsap.fromTo(star, { rotation: -12, scale: 0.9 }, { rotation: -5, scale: 1, duration: 0.8, ease: "elastic.out(1,0.5)" });
             } else {

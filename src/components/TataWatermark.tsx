@@ -9,7 +9,7 @@ export function TataWatermark({ name }: { name: string | null | undefined }) {
     {
       const context = gsap.context(() => {
         gsap.utils.toArray<HTMLElement>(root.current!.querySelectorAll(".tata-watermark-track")).forEach((row, index) => {
-          gsap.fromTo(row, { xPercent: index % 2 ? -50 : 0 }, { xPercent: index % 2 ? 0 : -50, duration: 32, repeat: -1, ease: "none" });
+          gsap.fromTo(row, { xPercent: index % 2 ? -50 : 0 }, { xPercent: index % 2 ? 0 : -50, duration: 64, repeat: -1, ease: "none" });
         });
       }, root.current!);
       const visibility = () => context.getTweens().forEach((tween: gsap.core.Tween) => document.hidden ? tween.pause() : tween.resume());
