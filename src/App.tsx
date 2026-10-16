@@ -1,12 +1,12 @@
 import { useEffect } from "react";
-import { PROJECTS, resolveProject } from "./lib/projects";
+import { resolveProject } from "./lib/projects";
 import { QueryPage } from "./QueryPage";
 
 export function App() {
   const home = window.location.pathname === "/";
-  const project = home ? PROJECTS.rok : resolveProject(window.location.pathname);
+  const project = resolveProject(window.location.pathname, window.location.search);
   useEffect(() => {
-    if (home) window.history.replaceState(null, "", `/rok${window.location.search}${window.location.hash}`);
+    if (home && project) window.history.replaceState(null, "", `/${project.slug}${window.location.search}${window.location.hash}`);
     document.title = project ? `${project.name} · 活动数据查询` : "创作营 · 活动数据查询";
     document.documentElement.dataset.project = project?.slug ?? "home";
     if (project?.slug === "tata") {

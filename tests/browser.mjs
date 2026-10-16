@@ -42,7 +42,8 @@ try {
     });
     await page.goto("http://127.0.0.1:3000/");
     await page.waitForURL("**/rok");
-    await page.goto("http://127.0.0.1:3000/tata?act=31");
+    await page.goto("http://127.0.0.1:3000/?period=3&act=31");
+    await page.waitForURL("**/tata?period=3&act=31");
     await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "31");
     assert.equal(await page.locator('nav, a[href="/rok"], a[href="/tata"]').count(), 0);
     assert.equal(await page.locator(".tata-period-picker select").isDisabled(), true);
@@ -78,6 +79,7 @@ try {
     assert.equal(await page.locator('.tata-metric-grid .panel').first().evaluate(element => getComputedStyle(element).backgroundImage), 'none');
     assert.equal(await page.locator('.tata-meter-well > strong').count(), await page.locator('.tata-share').count());
     assert.equal(queriedProject, 3);
+    assert.equal(await page.locator('.tata-metric-grid .panel').filter({ hasText: '过审视频' }).locator('span').nth(1).innerText(), '2/3');
     assert.equal(await page.locator('.tata-metric-grid .panel').evaluateAll(nodes => new Set(nodes.map(node => Math.round(node.getBoundingClientRect().top))).size), 1);
     assert.equal(await page.locator('.tata-live-columns > section').count(), 2);
     assert.equal(await page.locator(".tata-category-strategy .tata-number").innerText(), "12,000");

@@ -12,7 +12,11 @@ export function activityFromSearch(search: string): number | null {
   return Number.isSafeInteger(id) ? id : null;
 }
 
-export function resolveProject(pathname: string): Project | null {
+export function resolveProject(pathname: string, search = ""): Project | null {
   const path = pathname.replace(/\/+$/, "") || "/";
+  if (path === "/") {
+    const id = new URLSearchParams(search).get("period");
+    return id === null ? PROJECTS.rok : Object.values(PROJECTS).find(project => String(project.id) === id) ?? null;
+  }
   return Object.values(PROJECTS).find(project => path === `/${project.slug}`) ?? null;
 }

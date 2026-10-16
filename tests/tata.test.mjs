@@ -104,6 +104,11 @@ test("missing ACU is excluded from weighted denominator and route resolution is 
   assert.equal(resolveProject("/tata/").id, 3);
   assert.equal(resolveProject("/rok").id, 1);
   assert.equal(resolveProject("/unknown"), null);
+  assert.equal(resolveProject("/", "?period=3&act=61").id, 3);
+  assert.equal(resolveProject("/", "?period=1&act=10").id, 1);
+  assert.equal(resolveProject("/").id, 1);
+  assert.equal(resolveProject("/", "?period=unknown"), null);
+  assert.equal(resolveProject("/rok", "?period=3").id, 1);
 });
 
 test("aggregate endpoint rejects invalid input and retains existing API method allowlist", async () => {

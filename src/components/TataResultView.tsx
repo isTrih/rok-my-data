@@ -54,7 +54,7 @@ export function TataResultView({ result, pools, poolError, loading }: { result: 
     <header className="tata-result-head"><p>{s.period} · 创作成果</p><h2>{author ?? "我的活动数据"}</h2></header>
     <div className="grid grid-cols-4 gap-1.5 sm:gap-3 tata-metric-grid">
       {s.playCount > 0 ? <MetricCard label="视频播放" value={s.playCount} display={compact(s.playCount)} previous={null} /> : null}
-      {s.passedVideoCount > 0 ? <MetricCard label="过审作品" value={s.passedVideoCount} display={`${s.passedVideoCount} 篇`} previous={null} /> : null}
+      {result.videos.length > 0 ? <MetricCard label="过审视频" value={s.passedVideoCount} display={`${s.passedVideoCount}/${result.videos.length}`} previous={null} /> : null}
       {s.livePv > 0 ? <MetricCard label="直播场观" value={s.livePv} display={compact(s.livePv)} previous={null} /> : null}
       {s.weightedAcu > 0 ? <MetricCard label="加权 ACU" value={s.weightedAcu} display={formatAcu(s.weightedAcu)} previous={null} /> : null}
     </div>
