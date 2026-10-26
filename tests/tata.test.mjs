@@ -50,6 +50,7 @@ test("server traverses every page, limits scope to project 3 period, and rejects
   assert.equal(p.video.total, 510);
   assert.equal(p.live.total, 3000);
   assert.equal(calls.some(path => path.includes("content_config_id=11")), false);
+  assert.ok(calls.filter(path => path.includes("with-metrics")).every(path => new URL(path, "https://local.test").searchParams.get("metrics_mode") === "latest"));
   await assert.rejects(fetchTataPools(10, upstream), /期数不属于/);
   await assert.rejects(fetchTataPools(30, async path => path.includes("live-sessions") ? { data: [], meta: { has_more: true } } : upstream(path)), /分页数据不完整/);
 });
@@ -101,14 +102,18 @@ test("missing ACU is excluded from weighted denominator and route resolution is 
   const { weightedAcu } = await loadTs("../src/lib/metrics.ts");
   assert.equal(weightedAcu([{ acu: null, live_duration_seconds: 3600 }, { acu: 10, live_duration_seconds: 3600 }, { acu: 30, live_duration_seconds: 7200 }]), 70 / 3);
   const { resolveProject } = await loadTs("../src/lib/projects.ts");
-  assert.equal(resolveProject("/tata/").id, 3);
-  assert.equal(resolveProject("/rok").id, 1);
+  assert.equal(resolveProject("/tata/", "?act=61").id, 3);
+  assert.equal(resolveProject("/q", "?period=3&act=61").id, 3);
+  assert.equal(resolveProject("/q", "?period=1&act=10").id, 1);
+  assert.equal(resolveProject("/rok"), null);
   assert.equal(resolveProject("/unknown"), null);
   assert.equal(resolveProject("/", "?period=3&act=61").id, 3);
   assert.equal(resolveProject("/", "?period=1&act=10").id, 1);
-  assert.equal(resolveProject("/").id, 1);
+  assert.equal(resolveProject("/"), null);
   assert.equal(resolveProject("/", "?period=unknown"), null);
-  assert.equal(resolveProject("/rok", "?period=3").id, 1);
+  assert.equal(resolveProject("/rok", "?period=3&act=61"), null);
+  for (const search of ["", "?act=61", "?period=3", "?period=3&act=no", "?period=3&act=61&act=10", "?period=3&period=1&act=61", "?period=03&act=61"]) assert.equal(resolveProject("/q", search), null);
+  assert.equal(resolveProject("/tata", "?period=1&act=61"), null);
 });
 
 test("aggregate endpoint rejects invalid input and retains existing API method allowlist", async () => {

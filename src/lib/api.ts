@@ -1,6 +1,6 @@
 import type { BelowThresholdResponse, ProjectPeriod, SearchResponse } from "./types";
 
-/** 本页只关注 ROK 主项目。 */
+/** ROK 查询的默认项目，塔塔调用时显式传入项目 3。 */
 export const ROK_PROJECT_ID = 1;
 export const PLAY_THRESHOLD = 100_000;
 export const ACU_THRESHOLD = 10;
@@ -20,7 +20,7 @@ export async function request<T>(path: string, body?: unknown): Promise<T> {
   return payload;
 }
 
-/** 拉取期次列表，仅保留 project_id === 1 的期数。 */
+/** 拉取并限定到指定项目的期次列表。 */
 export async function fetchPeriods(projectId = ROK_PROJECT_ID): Promise<ProjectPeriod[]> {
   const list = await request<ProjectPeriod[]>("/api/v1/queries/projects");
   return list
@@ -36,7 +36,6 @@ export async function searchByKey(activityPeriodId: number, key: string, project
   for (let offset = 0; ; offset += 500) {
     const page = await request<SearchResponse>("/api/v1/queries/v2/audit-extra/search", {
     activity_period_id: activityPeriodId,
-    audit_result: "",
     conditions: { key },
       limit: 500,
       offset,

@@ -1,3 +1,4 @@
+import { Unavailable } from "./components/Unavailable";
 import type { Project } from "./lib/projects";
 import { activityFromSearch } from "./lib/projects";
 import { fetchTataPools, type TataPools } from "./lib/tata";
@@ -39,48 +40,42 @@ export function QueryPage({ project }: { project: Project }) {
   const [tataPools, setTataPools] = useState<TataPools | null>(null);
   const [poolError, setPoolError] = useState(false);
   const [periodsLoading, setPeriodsLoading] = useState(true);
+  const [invalidLink, setInvalidLink] = useState(false);
   const Form = isTata ? TataSearchForm : SearchForm;
 
   useEffect(() => {
-    const cached = loadForm(project.id);
-    const linkedPeriod = isTata ? activityFromSearch(window.location.search) : null;
-    const initialPeriod = linkedPeriod ?? cached?.activityPeriodId ?? null;
-    setActivityPeriodId(initialPeriod);
-    if (cached) {
-      setKeyword(cached.key);
-      if (isTata && initialPeriod !== null) {
-        const query = loadTataQuery(cached.key, initialPeriod);
-        if (query) {
-          const restoredResult = buildResult(query.response, { key: query.key, activityPeriodId: query.activityPeriodId, period: query.period });
-          restoredResult.snapshot.updatedAt = query.updatedAt;
-          setResult(restoredResult);
-          setTataPools(query.pools);
-          setPhase(restoredResult.empty ? "empty" : "result");
-        }
-      }
-    }
-
+    let active = true;
+    const linkedPeriod = activityFromSearch(window.location.search);
     fetchPeriods(project.id)
       .then(list => {
+        if (!active) return;
+        if (linkedPeriod === null || !list.some(item => item.activity_period_id === linkedPeriod)) {
+          setInvalidLink(true);
+          return;
+        }
         setPeriods(list);
         savePeriods(list, project.id);
-        if (initialPeriod != null && !list.some(item => item.activity_period_id === initialPeriod)) {
-          setResult(null); setTataPools(null); setPhase("idle");
-          if (linkedPeriod !== null) setError("指定期数不可用，请重新选择。");
+        setActivityPeriodId(linkedPeriod);
+        const cached = loadForm(project.id);
+        if (cached) {
+          setKeyword(cached.key);
+          if (isTata) {
+            const query = loadTataQuery(cached.key, linkedPeriod);
+            if (query) {
+              const restoredResult = buildResult(query.response, { key: query.key, activityPeriodId: query.activityPeriodId, period: query.period });
+              restoredResult.snapshot.updatedAt = query.updatedAt;
+              setResult(restoredResult);
+              setTataPools(query.pools);
+              setPhase(restoredResult.empty ? "empty" : "result");
+            }
+          }
         }
-        if (list.length === 0) setError("当前项目暂无可查询期数");
-        setActivityPeriodId(current =>
-          current !== null && list.some(item => item.activity_period_id === current)
-            ? current
-            : (list[0]?.activity_period_id ?? null),
-        );
-      })
-      .catch((cause: Error) => setError(cause.message))
-      .finally(() => {
         restored.current = true;
-        setPeriodsLoading(false);
-      });
-  }, []);
+      })
+      .catch(() => { if (active) setInvalidLink(true); })
+      .finally(() => { if (active) setPeriodsLoading(false); });
+    return () => { active = false; };
+  }, [project.id, isTata]);
 
   useEffect(() => {
     if (restored.current) saveForm({ key: keyword, activityPeriodId }, project.id);
@@ -160,6 +155,9 @@ export function QueryPage({ project }: { project: Project }) {
     }
   }, [keyword, activityPeriodId, loading, periods, project.id, isTata]);
 
+  if (invalidLink) return <Unavailable />;
+  if (periodsLoading) return <main className="project-home" role="status" aria-label="正在验证链接" />;
+
   return (
     <main className={`mx-auto w-full max-w-3xl px-3 py-5 sm:px-5 sm:py-8 ${isTata ? "tata-page" : ""}`}>
       {isTata && result ? <TataWatermark name={result.videos.find(row => row.author_name)?.author_name ?? result.lives.find(row => row.anchor_name)?.anchor_name} /> : null}
@@ -183,11 +181,9 @@ export function QueryPage({ project }: { project: Project }) {
             onValueChange={setKeyword}
             onPeriodChange={id => {
               setActivityPeriodId(id); setResult(null); setPhase("idle"); setTataPools(null); setError(null);
-              if (isTata) {
-                const url = new URL(window.location.href);
-                url.searchParams.set("act", String(id));
-                window.history.replaceState(null, "", url);
-              }
+              const url = new URL(window.location.href);
+              url.searchParams.set("act", String(id));
+              window.history.replaceState(null, "", url);
             }}
             onSubmit={runQuery}
           />

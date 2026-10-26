@@ -4,6 +4,7 @@ import { createRequire } from "node:module";
 import { aggregateTata } from "../server/tata.js";
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE || "playwright");
+const baseUrl = process.env.PREVIEW_URL || "http://127.0.0.1:3000";
 const browser = await chromium.launch({ headless: true, ...(process.env.BROWSER_CHANNEL ? { channel: process.env.BROWSER_CHANNEL } : {}) });
 await mkdir("artifacts", { recursive: true });
 const periods = [{ project_id: 1, activity_period_id: 10, period: "ROK 第一期" }, { project_id: 3, activity_period_id: 30, period: "塔塔 第一期" }, { project_id: 3, activity_period_id: 31, period: "塔塔 第二期" }];
@@ -26,7 +27,7 @@ try {
     let releasePools;
     await page.route("**/api/**", async route => {
       const path = new URL(route.request().url()).pathname;
-      if (path.endsWith("projects")) return route.fulfill({ json: periods });
+      if (path.endsWith("projects")) return mode === "period-error" ? route.fulfill({ status: 502, json: { message: "failed" } }) : route.fulfill({ json: periods });
       if (path === "/api/tata/pools") {
         if (holdPools) await new Promise(resolve => { releasePools = resolve; });
         return mode === "pool-error" ? route.fulfill({ status: 502, json: { message: "failed" } }) : route.fulfill({ json: pools });
@@ -40,14 +41,18 @@ try {
       }
       return route.fulfill({ json: { ok: true, summary: {} } });
     });
-    await page.goto("http://127.0.0.1:3000/");
-    await page.waitForURL("**/rok");
-    await page.goto("http://127.0.0.1:3000/?period=3&act=31");
-    await page.waitForURL("**/tata?period=3&act=31");
+    for (const path of ["/", "/q", "/q?period=3", "/q?act=30", "/q?period=99&act=30", "/rok", "/missing"]) {
+      await page.goto(`${baseUrl}${path}`);
+      await page.getByRole('heading', { name: '当前无法访问，请检查链接是否有误。', exact: true }).waitFor();
+      assert.equal(await page.getByRole('button', { name: '查询数据', exact: true }).count(), 0);
+    }
+    await page.goto(new URL("/?period=3&act=31", baseUrl).href);
+    await page.waitForURL("**/q?period=3&act=31");
     await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "31");
     assert.equal(await page.locator('nav, a[href="/rok"], a[href="/tata"]').count(), 0);
     assert.equal(await page.locator(".tata-period-picker select").isDisabled(), true);
-    await page.goto("http://127.0.0.1:3000/tata?act=30");
+    await page.goto(new URL("/tata?act=30", baseUrl).href);
+    await page.waitForURL("**/q?period=3&act=30");
     await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "30");
     assert.equal(await page.getByRole("textbox").count(), 0);
     assert.equal(await page.getByText("创作营", { exact: false }).count(), 0);
@@ -117,10 +122,10 @@ try {
     assert.equal(await page.getByRole('dialog', { name: '直播日历', exact: true }).count(), 0);
     assert.equal(await page.locator('.tata-category-live .tata-rank-award').count(), 1);
     assert.equal(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth), false);
-    await page.goto("http://127.0.0.1:3000/tata?act=31");
+    await page.goto(new URL("/tata?act=31", baseUrl).href);
     await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "31");
     assert.equal(await page.getByRole("tab").count(), 0);
-    await page.goto("http://127.0.0.1:3000/tata?act=30");
+    await page.goto(new URL("/tata?act=30", baseUrl).href);
     await page.waitForFunction(() => document.querySelector(".tata-period-picker select")?.value === "30");
     await page.reload();
     await page.locator('.tata-result-head').waitFor();
@@ -165,13 +170,18 @@ try {
     assert.equal(await page.locator('.tata-category').count(), 0);
     assert.equal(await page.locator('.tata-metric-grid .panel').count(), 1);
     mode = "normal";
-    await page.goto("http://127.0.0.1:3000/tata?act=31");
+    await page.goto(new URL("/tata?act=31", baseUrl).href);
     await page.waitForFunction(() => document.querySelector('.tata-period-picker select')?.value === '31');
     assert.equal(await page.locator('.tata-result-head').count(), 0);
-    await page.goto("http://127.0.0.1:3000/tata?act=10");
-    await page.getByRole('alert').filter({hasText: '指定期数不可用'}).waitFor();
-    assert.equal(await page.locator('.tata-period-picker select').inputValue(), '31');
-    await page.goto("http://127.0.0.1:3000/rok");
+    await page.goto(new URL("/tata?act=10", baseUrl).href);
+    await page.getByRole('heading', { name: '当前无法访问，请检查链接是否有误。', exact: true }).waitFor();
+    assert.equal(await page.locator('.tata-period-picker select').count(), 0);
+    mode = "period-error";
+    await page.goto(new URL("/q?period=3&act=30", baseUrl).href);
+    await page.getByRole('heading', { name: '当前无法访问，请检查链接是否有误。', exact: true }).waitFor();
+    assert.equal(await page.locator('.tata-result-head').count(), 0);
+    mode = "normal";
+    await page.goto(new URL("/q?period=1&act=10", baseUrl).href);
     await page.locator('select').selectOption("10");
     assert.equal(await page.locator("input").inputValue(), "");
     await page.locator("input").fill("rok-only");

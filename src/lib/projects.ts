@@ -14,9 +14,9 @@ export function activityFromSearch(search: string): number | null {
 
 export function resolveProject(pathname: string, search = ""): Project | null {
   const path = pathname.replace(/\/+$/, "") || "/";
-  if (path === "/") {
-    const id = new URLSearchParams(search).get("period");
-    return id === null ? PROJECTS.rok : Object.values(PROJECTS).find(project => String(project.id) === id) ?? null;
-  }
-  return Object.values(PROJECTS).find(project => path === `/${project.slug}`) ?? null;
+  const params = new URLSearchParams(search);
+  if (!activityFromSearch(search) || params.getAll("act").length !== 1 || params.getAll("period").length > 1) return null;
+  if (path === "/tata") return params.has("period") && params.get("period") !== "3" ? null : PROJECTS.tata;
+  if (path !== "/q" && path !== "/") return null;
+  return Object.values(PROJECTS).find(project => String(project.id) === params.get("period")) ?? null;
 }

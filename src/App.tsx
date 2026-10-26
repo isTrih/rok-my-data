@@ -1,12 +1,15 @@
 import { useEffect } from "react";
 import { resolveProject } from "./lib/projects";
 import { QueryPage } from "./QueryPage";
+import { Unavailable } from "./components/Unavailable";
 
 export function App() {
-  const home = window.location.pathname === "/";
   const project = resolveProject(window.location.pathname, window.location.search);
   useEffect(() => {
-    if (home && project) window.history.replaceState(null, "", `/${project.slug}${window.location.search}${window.location.hash}`);
+    if (project) {
+      const params = new URLSearchParams({ period: String(project.id), act: new URLSearchParams(window.location.search).get("act")! });
+      window.history.replaceState(null, "", `/q?${params}${window.location.hash}`);
+    }
     document.title = project ? `${project.name} · 活动数据查询` : "创作营 · 活动数据查询";
     document.documentElement.dataset.project = project?.slug ?? "home";
     if (project?.slug === "tata") {
@@ -23,10 +26,7 @@ export function App() {
       }
     }
     document.querySelector('meta[name="description"]')?.setAttribute("content", project ? `${project.name}视频与直播活动数据查询` : "选择创作营活动，查询视频与直播数据");
-  }, [project, home]);
+  }, [project]);
   if (project) return <QueryPage key={project.id} project={project} />;
-  return <main className="project-home">
-    <h1>页面不存在</h1>
-    <p>请检查活动查询页地址。</p>
-  </main>;
+  return <Unavailable />;
 }

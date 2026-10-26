@@ -62,7 +62,7 @@ export async function fetchTataPools(periodId, upstream) {
   const fetchVideos = async id => {
     const rows = [];
     for (let offset = 0; ; offset += 500) {
-      const page = await upstream(`/api/v1/queries/videos/with-metrics?content_config_id=${id}&limit=500&offset=${offset}`);
+      const page = await upstream(`/api/v1/queries/videos/with-metrics?content_config_id=${id}&metrics_mode=latest&limit=500&offset=${offset}`);
       if (!Array.isArray(page)) throw new Error("视频数据格式异常");
       rows.push(...page);
       if (page.length < 500) return rows;
